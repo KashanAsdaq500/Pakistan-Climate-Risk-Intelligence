@@ -35,13 +35,70 @@ const EXAMPLE_QUESTIONS = [
   "What are PMD criteria for declaring a heatwave in Pakistan?"
 ];
 
+function FormattedMessage({ text, isUser }: { text: string; isUser: boolean }) {
+  if (isUser) {
+    return <div className="whitespace-pre-line">{text}</div>;
+  }
+
+  // Unescape backslashes before markdown characters like \*\* or \_
+  const sanitizedText = text.replace(/\\([*_`~[\]()])/g, '$1');
+
+  const parseInline = (str: string) => {
+    const parts = str.split(/(\*\*.*?\*\*|\*[^*]+?\*)/g);
+    return parts.map((part, i) => {
+      if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
+        return (
+          <strong key={i} className="font-bold text-slate-900">
+            {part.slice(2, -2)}
+          </strong>
+        );
+      }
+      if (part.startsWith('*') && part.endsWith('*') && part.length > 2) {
+        return <em key={i}>{part.slice(1, -1)}</em>;
+      }
+      return part;
+    });
+  };
+
+  const blocks = sanitizedText.split(/\n\s*\n/);
+
+  return (
+    <div className="space-y-3">
+      {blocks.map((block, bIdx) => {
+        const lines = block.split('\n').map((l) => l.trim()).filter(Boolean);
+
+        return (
+          <div key={bIdx} className="space-y-1.5">
+            {lines.map((line, lIdx) => {
+              if (line.startsWith('- ') || line.startsWith('* ')) {
+                const itemText = line.replace(/^[-*]\s+/, '');
+                return (
+                  <div key={lIdx} className="flex items-start gap-2 pl-1 sm:pl-2">
+                    <span className="text-[#01411c] font-bold text-base leading-tight select-none">•</span>
+                    <span className="flex-1 text-slate-800 leading-relaxed">{parseInline(itemText)}</span>
+                  </div>
+                );
+              }
+              return (
+                <p key={lIdx} className="text-slate-800 leading-relaxed">
+                  {parseInline(line)}
+                </p>
+              );
+            })}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function ClimateAssistantPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 'welcome',
       sender: 'assistant',
       text: "Hello! I am your Pakistan Climate Knowledge Assistant. I can answer questions regarding heatwave definitions, physiological thermal stress, urban heat islands, adaptation protocols, and temperature risk interpretations using authoritative publications from the Pakistan Meteorological Department (PMD), NDMA Pakistan, WHO, NASA, and the IPCC.",
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      timestamp: '',
     }
   ]);
   const [inputQuery, setInputQuery] = useState('');
@@ -51,6 +108,15 @@ export default function ClimateAssistantPage() {
   const chatBottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Populate client-side timestamp on mount to prevent SSR hydration mismatch
+    setMessages((prev) =>
+      prev.map((msg) =>
+        msg.id === 'welcome' && !msg.timestamp
+          ? { ...msg, timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
+          : msg
+      )
+    );
+
     fetchRAGSources()
       .then((res) => setSourcesList(res.sources))
       .catch(() => {});
@@ -137,7 +203,7 @@ export default function ClimateAssistantPage() {
                       : 'bg-white border border-slate-200 text-slate-800 shadow-sm'
                   }`}
                 >
-                  <div className="whitespace-pre-line">{msg.text}</div>
+                  <FormattedMessage text={msg.text} isUser={msg.sender === 'user'} />
 
                   {/* Retrieved Sources Citations */}
                   {msg.sources && msg.sources.length > 0 && (

@@ -167,7 +167,7 @@ print("==============================")
 
 model_path = MODEL_DIR / "temperature_model.pkl"
 
-joblib.dump(pipeline, model_path)
+joblib.dump(pipeline, model_path, compress=3)
 
 print(f"\nModel saved to:")
 print(model_path)

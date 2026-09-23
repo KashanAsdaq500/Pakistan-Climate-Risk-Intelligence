@@ -59,6 +59,15 @@ class MLService:
         if not info_path.exists():
             raise FileNotFoundError(f"Model info file not found at {info_path}")
 
+        # Git LFS pointer guard
+        for path_to_check in (model_path, info_path):
+            with open(path_to_check, "rb") as f:
+                header = f.read(30)
+                if header.startswith(b"version https://git-lfs"):
+                    raise RuntimeError(
+                        f"Model file at {path_to_check} is an un-hydrated Git LFS pointer file, not the actual binary model."
+                    )
+
         print(f"[MLService] Loading ML model from {model_path}...")
         self.model = joblib.load(model_path)
         print(f"[MLService] Loading Model Info from {info_path}...")

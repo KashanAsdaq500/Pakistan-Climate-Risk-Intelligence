@@ -14,6 +14,7 @@ __pycache__/
 *$py.class
 *.so
 .pytest_cache/
+backend/models/
 
 # Virtual environments
 venv/

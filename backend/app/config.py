@@ -3,7 +3,34 @@ from pathlib import Path
 from pydantic_settings import BaseSettings
 
 BACKEND_DIR = Path(__file__).resolve().parents[1]
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
+def _find_project_root() -> Path:
+    current = Path(__file__).resolve()
+    # Check parent directories for models/temperature_model.pkl (works in local dev and monorepo)
+    for parent in current.parents:
+        if (parent / "models" / "temperature_model.pkl").exists():
+            return parent
+
+    # Check current working directory and its parents
+    cwd = Path.cwd().resolve()
+    for parent in [cwd] + list(cwd.parents):
+        if (parent / "models" / "temperature_model.pkl").exists():
+            return parent
+
+    # Check Vercel serverless task directory (/var/task)
+    var_task = Path("/var/task")
+    if (var_task / "models" / "temperature_model.pkl").exists():
+        return var_task
+
+    # Fallback: if backend directory is named "backend", parent is project root
+    backend_candidate = current.parents[1]
+    if backend_candidate.name == "backend":
+        return backend_candidate.parent
+
+    # Otherwise return backend candidate (/var/task on Vercel)
+    return backend_candidate
+
+PROJECT_ROOT = _find_project_root()
 
 class Settings(BaseSettings):
     APP_NAME: str = "Pakistan Climate Risk Intelligence API"

@@ -20,9 +20,39 @@ class MLService:
             cls._instance = MLService()
         return cls._instance
 
+    @staticmethod
+    def _resolve_model_path(configured_path: str, filename: str) -> Path:
+        p = Path(configured_path).resolve()
+        if p.exists():
+            return p
+
+        # Fallback candidates for serverless / container / monorepo deployments
+        candidates = [
+            # Check relative to backend/app/services
+            Path(__file__).resolve().parents[3] / "models" / filename,
+            Path(__file__).resolve().parents[2] / "models" / filename,
+            Path(__file__).resolve().parents[1] / "models" / filename,
+            # Check working directory
+            Path.cwd().resolve() / "models" / filename,
+            Path.cwd().resolve().parent / "models" / filename,
+            # Check Vercel serverless /var/task
+            Path("/var/task") / "models" / filename,
+            Path("/var/task/backend") / "models" / filename,
+        ]
+
+        for cand in candidates:
+            try:
+                resolved = cand.resolve()
+                if resolved.exists():
+                    return resolved
+            except Exception:
+                continue
+
+        return p
+
     def load_models(self):
-        model_path = Path(settings.MODEL_PATH).resolve()
-        info_path = Path(settings.MODEL_INFO_PATH).resolve()
+        model_path = self._resolve_model_path(settings.MODEL_PATH, "temperature_model.pkl")
+        info_path = self._resolve_model_path(settings.MODEL_INFO_PATH, "model_info.pkl")
 
         if not model_path.exists():
             raise FileNotFoundError(f"Model file not found at {model_path}")

@@ -8,7 +8,8 @@
     "backend": {
       "root": "backend",
       "framework": "fastapi",
-      "entrypoint": "app/main.py"
+      "entrypoint": "app/main.py",
+      "buildCommand": "python -c \"import shutil, pathlib; p=pathlib.Path('models'); p.mkdir(exist_ok=True); [shutil.copy2(f, p) for f in pathlib.Path('../models').glob('*.pkl')]\""
     }
   },
   "rewrites": [

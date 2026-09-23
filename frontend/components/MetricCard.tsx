@@ -1,5 +1,6 @@
 import React from 'react';
 import { LucideIcon } from 'lucide-react';
+import IconWrapper from './IconWrapper';
 
 interface MetricCardProps {
   title: string;
@@ -8,7 +9,7 @@ interface MetricCardProps {
   icon: LucideIcon;
   trend?: string;
   trendPositive?: boolean;
-  color?: 'emerald' | 'amber' | 'blue' | 'purple' | 'red';
+  color?: 'green' | 'amber' | 'blue' | 'purple' | 'red';
 }
 
 export default function MetricCard({
@@ -18,32 +19,32 @@ export default function MetricCard({
   icon: Icon,
   trend,
   trendPositive,
-  color = 'emerald'
+  color = 'green'
 }: MetricCardProps) {
   const colorMap = {
-    emerald: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-    amber: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-    blue: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-    purple: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
-    red: 'bg-red-500/10 text-red-400 border-red-500/20',
+    green: 'bg-emerald-50 text-[#01411c] border-emerald-200',
+    amber: 'bg-amber-50 text-amber-800 border-amber-200',
+    blue: 'bg-blue-50 text-blue-800 border-blue-200',
+    purple: 'bg-purple-50 text-purple-800 border-purple-200',
+    red: 'bg-red-50 text-red-800 border-red-200',
   };
 
   return (
-    <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm hover:border-slate-700 transition-colors">
+    <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-emerald-300 transition-all">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">{title}</span>
+        <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">{title}</span>
         <div className={`p-2.5 rounded-xl border ${colorMap[color]}`}>
-          <Icon className="w-5 h-5" />
+          <IconWrapper icon={Icon} className="w-5 h-5" />
         </div>
       </div>
       <div className="mt-3">
-        <div className="text-2xl font-bold text-white tracking-tight">{value}</div>
-        {subtitle && <p className="text-xs text-slate-400 mt-1">{subtitle}</p>}
+        <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">{value}</div>
+        {subtitle && <p className="text-xs text-slate-500 mt-1 font-medium">{subtitle}</p>}
       </div>
       {trend && (
         <div className="mt-3 flex items-center gap-1.5 text-xs">
-          <span className={trendPositive ? 'text-emerald-400' : 'text-amber-400'}>{trend}</span>
-          <span className="text-slate-500">vs historical baseline</span>
+          <span className={trendPositive ? 'text-[#01411c] font-bold' : 'text-amber-700 font-bold'}>{trend}</span>
+          <span className="text-slate-400">vs historical baseline</span>
         </div>
       )}
     </div>

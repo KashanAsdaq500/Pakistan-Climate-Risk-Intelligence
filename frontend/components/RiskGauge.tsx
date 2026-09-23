@@ -11,61 +11,58 @@ export default function RiskGauge({ temperature, heatRisk }: RiskGaugeProps) {
   const minTemp = 20;
   const maxTemp = 50;
   const clampedTemp = Math.min(Math.max(temperature, minTemp), maxTemp);
-  const percentage = ((clampedTemp - minTemp) / (maxTemp - minTemp)) * 100;
-
-  const tiers = [
-    { label: 'LOW', range: '<35°C', color: 'bg-emerald-500', width: '50%' }, // 20 to 35 = 15/30 = 50%
-    { label: 'MOD', range: '35–39.9°C', color: 'bg-amber-500', width: '16.6%' }, // 35 to 40 = 5/30 = 16.6%
-    { label: 'HIGH', range: '40–44.9°C', color: 'bg-orange-500', width: '16.6%' }, // 40 to 45 = 5/30 = 16.6%
-    { label: 'EXTR', range: '≥45°C', color: 'bg-red-500', width: '16.8%' }, // 45 to 50 = 5/30 = 16.8%
-  ];
+  const percentage = Math.min(Math.max(((clampedTemp - minTemp) / (maxTemp - minTemp)) * 100, 2), 98);
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between text-xs text-slate-400">
-        <span className="font-medium text-slate-300">Temperature Thermal Scale</span>
-        <span className="font-mono text-white font-semibold">{temperature.toFixed(1)} °C</span>
+      <div className="flex items-center justify-between text-xs text-slate-600">
+        <span className="font-bold text-slate-700 uppercase tracking-wider text-[11px]">
+          Temperature-Based Thermal Scale
+        </span>
+        <span className="font-mono text-slate-900 font-extrabold text-sm">
+          {temperature.toFixed(1)} °C
+        </span>
       </div>
 
-      {/* Bar Gauge */}
-      <div className="relative pt-4 pb-2">
+      {/* Bar Gauge Container */}
+      <div className="relative pt-6 pb-2">
         {/* Needle pointer */}
         <div
-          className="absolute -top-1 transition-all duration-500 transform -translate-x-1/2 flex flex-col items-center"
+          className="absolute top-0 transition-all duration-500 transform -translate-x-1/2 flex flex-col items-center z-10"
           style={{ left: `${percentage}%` }}
         >
-          <div className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-white text-slate-900 shadow">
+          <div className="px-2 py-0.5 rounded-md text-[11px] font-extrabold bg-[#01411c] text-white shadow-md border border-emerald-400/30 font-mono">
             {temperature.toFixed(1)}°C
           </div>
-          <div className="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[5px] border-t-white" />
+          <div className="w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[6px] border-t-[#01411c]" />
         </div>
 
         {/* Multi-segment Gauge track */}
-        <div className="h-3.5 w-full rounded-full overflow-hidden flex bg-slate-800 p-0.5 border border-slate-700">
-          <div className="h-full bg-emerald-500 rounded-l-full" style={{ width: '50%' }} title="LOW (<35°C)" />
+        <div className="h-4 w-full rounded-full overflow-hidden flex bg-slate-200 p-0.5 border border-slate-300 shadow-inner">
+          <div className="h-full bg-emerald-600 rounded-l-full" style={{ width: '50%' }} title="LOW (<35°C)" />
           <div className="h-full bg-amber-500" style={{ width: '16.7%' }} title="MODERATE (35-39.9°C)" />
           <div className="h-full bg-orange-500" style={{ width: '16.7%' }} title="HIGH (40-44.9°C)" />
-          <div className="h-full bg-red-500 rounded-r-full" style={{ width: '16.6%' }} title="EXTREME (≥45°C)" />
+          <div className="h-full bg-red-600 rounded-r-full" style={{ width: '16.6%' }} title="EXTREME (≥45°C)" />
         </div>
       </div>
 
       {/* Threshold Labels */}
-      <div className="grid grid-cols-4 gap-1 text-[10px] text-center pt-1 border-t border-slate-800">
-        <div>
-          <span className="text-emerald-400 font-bold block">LOW</span>
-          <span className="text-slate-500">&lt; 35°C</span>
+      <div className="grid grid-cols-4 gap-1 text-[11px] text-center pt-2 border-t border-slate-100">
+        <div className="bg-emerald-50/60 p-1.5 rounded-lg border border-emerald-200/50">
+          <span className="text-[#01411c] font-extrabold block">LOW</span>
+          <span className="text-slate-500 text-[10px]">&lt; 35.0 °C</span>
         </div>
-        <div>
-          <span className="text-amber-400 font-bold block">MODERATE</span>
-          <span className="text-slate-500">35 – 39.9°C</span>
+        <div className="bg-amber-50/60 p-1.5 rounded-lg border border-amber-200/50">
+          <span className="text-amber-800 font-extrabold block">MODERATE</span>
+          <span className="text-slate-500 text-[10px]">35 – 39.9 °C</span>
         </div>
-        <div>
-          <span className="text-orange-400 font-bold block">HIGH</span>
-          <span className="text-slate-500">40 – 44.9°C</span>
+        <div className="bg-orange-50/60 p-1.5 rounded-lg border border-orange-200/50">
+          <span className="text-orange-800 font-extrabold block">HIGH</span>
+          <span className="text-slate-500 text-[10px]">40 – 44.9 °C</span>
         </div>
-        <div>
-          <span className="text-red-400 font-bold block">EXTREME</span>
-          <span className="text-slate-500">≥ 45°C</span>
+        <div className="bg-red-50/60 p-1.5 rounded-lg border border-red-200/50">
+          <span className="text-red-700 font-extrabold block">EXTREME</span>
+          <span className="text-slate-500 text-[10px]">≥ 45.0 °C</span>
         </div>
       </div>
     </div>

@@ -12,16 +12,20 @@ export default function HeatRiskBadge({ risk, size = 'md', showDot = true }: Hea
   const styles = formatHeatRiskColor(risk);
   
   const sizeClasses = {
-    sm: 'text-xs px-2 py-0.5 font-medium',
-    md: 'text-xs px-2.5 py-1 font-semibold tracking-wide',
-    lg: 'text-sm px-3.5 py-1.5 font-bold tracking-wider',
+    sm: 'text-[11px] px-2.5 py-0.5 font-bold',
+    md: 'text-xs px-3 py-1 font-bold tracking-wide shadow-sm',
+    lg: 'text-sm px-4 py-1.5 font-extrabold tracking-wider shadow-sm',
   };
 
   return (
     <span
       className={`inline-flex items-center gap-1.5 rounded-full border ${styles.bg} ${styles.border} ${styles.text} ${sizeClasses[size]}`}
     >
-      {showDot && <span className={`w-1.5 h-1.5 rounded-full ${styles.dot}`} />}
+      {showDot && (
+        <span className="inline-flex shrink-0 items-center justify-center" aria-hidden="true">
+          <span className={`w-2 h-2 rounded-full ${styles.dot}`} />
+        </span>
+      )}
       <span>{risk?.toUpperCase()} RISK</span>
     </span>
   );

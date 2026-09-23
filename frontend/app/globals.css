@@ -3,35 +3,41 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 248, 250, 252;
-  --background-start-rgb: 15, 23, 42;
-  --background-end-rgb: 2, 6, 23;
+  --foreground-rgb: 15, 23, 42;
+  --background-start-rgb: 248, 250, 252;
+  --background-end-rgb: 255, 255, 255;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      rgb(var(--background-start-rgb)),
-      rgb(var(--background-end-rgb))
-    )
-    fixed;
+  background-color: #f8fafc;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(1, 65, 28, 0.03) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(1, 65, 28, 0.04) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(1, 65, 28, 0.02) 0px, transparent 50%);
   min-height: 100vh;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - sleek Pakistan Green accents */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.6);
+  background: #f1f5f9;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(51, 65, 85, 0.8);
+  background: #cbd5e1;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 1);
+  background: #01411c;
+}
+
+/* Subtle pattern for Pakistan flag inspired scientific aesthetic */
+.pakistan-subtle-pattern {
+  background-color: #ffffff;
+  background-image: radial-gradient(rgba(1, 65, 28, 0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
 }

@@ -9,36 +9,40 @@ export function formatHeatRiskColor(risk: string) {
   switch (risk?.toUpperCase()) {
     case 'EXTREME':
       return {
-        bg: 'bg-red-500/15',
-        border: 'border-red-500',
-        text: 'text-red-600',
-        dot: 'bg-red-500',
-        badge: 'bg-red-600 text-white',
+        bg: 'bg-red-50',
+        border: 'border-red-300',
+        text: 'text-red-700',
+        dot: 'bg-red-600',
+        badge: 'bg-red-700 text-white',
+        borderLeft: 'border-l-red-600',
       };
     case 'HIGH':
       return {
-        bg: 'bg-orange-500/15',
-        border: 'border-orange-500',
-        text: 'text-orange-600',
+        bg: 'bg-orange-50',
+        border: 'border-orange-300',
+        text: 'text-orange-800',
         dot: 'bg-orange-500',
         badge: 'bg-orange-600 text-white',
+        borderLeft: 'border-l-orange-500',
       };
     case 'MODERATE':
       return {
-        bg: 'bg-amber-500/15',
-        border: 'border-amber-500',
-        text: 'text-amber-600',
+        bg: 'bg-amber-50',
+        border: 'border-amber-300',
+        text: 'text-amber-900',
         dot: 'bg-amber-500',
-        badge: 'bg-amber-500 text-white',
+        badge: 'bg-amber-600 text-white',
+        borderLeft: 'border-l-amber-500',
       };
     case 'LOW':
     default:
       return {
-        bg: 'bg-emerald-500/15',
-        border: 'border-emerald-500',
-        text: 'text-emerald-600',
-        dot: 'bg-emerald-500',
-        badge: 'bg-emerald-600 text-white',
+        bg: 'bg-emerald-50',
+        border: 'border-emerald-300',
+        text: 'text-[#01411c]',
+        dot: 'bg-[#01411c]',
+        badge: 'bg-[#01411c] text-white',
+        borderLeft: 'border-l-[#01411c]',
       };
   }
 }
